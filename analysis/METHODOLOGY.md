@@ -100,6 +100,11 @@ Project"). `analysis/inputs.py` removes their 20 inputs in the same way.
 Their 49 responses ($3.27) stay in the cost, because the cost covers all
 sessions of the pltrs repository.
 
+The case ends when release 0.1.1 is complete. The last release step is
+the upload to crates.io on 23 November 2026 (input H225 at 08:29 UTC).
+`analysis/inputs.py` removes the 5 later inputs (H226 to H230), which
+are about a writing tool of the author.
+
 ## 3. Identification of the author's inputs
 
 Script: `analysis/inputs.py`. Results: `data/derived/human_inputs.jsonl`
@@ -109,9 +114,9 @@ An input is text that the author typed, or an action of the author in a
 session. The script uses three rules:
 
 1. **T3 messages.** A T3 message with `createdBy` `user` and the creation
-   source `web` or `mobile` is an input (204 messages, 21 of them from
-   the phone, without the threads of other providers and the threads
-   about the paper). Messages with `createdBy` `agent` (3,667) are tasks and
+   source `web` or `mobile` is an input (199 messages, 21 of them from
+   the phone, without the threads of other providers, the threads about
+   the paper and the inputs after the end of the case). Messages with `createdBy` `agent` (3,667) are tasks and
    reports between agents. Two messages with `createdBy` `user` and the
    source `server` are an automatic "Continue where you left off." and a
    relayed agent text. The script does not count them.
@@ -154,8 +159,9 @@ were fixed before the coding started. Each input gets:
 
 Procedure:
 
-1. Coder 1 coded all 234 inputs with text (206 after the removal of
-   the threads of other providers and of the threads about the paper) (5 batches of 47 in time
+1. Coder 1 coded all 234 inputs with text (201 after the removal of
+   the threads of other providers, the threads about the paper and the
+   inputs after the end of the case) (5 batches of 47 in time
    order) with the full codebook. For each `steer` and `report` input,
    coder 1 read the transcript before the input
    (`analysis/context.py <id>`) to find what the agent did.
@@ -167,27 +173,25 @@ Procedure:
    done"). The recheck found 16 such goals.
 4. `analysis/summarize_inputs.py` merges the codes. An input is
    "corrective" if it has `steer` or `report`, or if it is a goal that
-   reacts to the agent (44 inputs).
+   reacts to the agent (43 inputs).
 
 Coders 1 and 2 and the recheck were Claude Opus 5.5 agents. Agreement
 between coder 1 and coder 2 (`results/inputs/agreement.json`):
 
 | Field | Inputs | Agreement | Cohen's kappa |
 | --- | --- | --- | --- |
-| category | 206 | 95.6 % | 0.949 |
-| topic | 206 | 97.6 % | 0.971 |
-| steer or not steer | 206 | 97.6 % | 0.858 |
-| problem (both coded steer or report) | 28 | 85.7 % | 0.831 |
+| category | 201 | 96.5 % | 0.959 |
+| topic | 201 | 97.5 % | 0.970 |
+| steer or not steer | 201 | 97.5 % | 0.851 |
+| problem (both coded steer or report) | 27 | 88.9 % | 0.867 |
 
 Both coders are the same model with the same codebook, so this agreement
 measures how stable the codes are, not how two independent people would
-code. The author must check the codes:
-
-1. Read `results/inputs/disagreements.csv` (13 inputs, category or topic differs) and decide each.
-2. Code a random sample of at least 50 inputs without looking at the
-   codes, and calculate kappa against coder 1.
-3. Read each case in `results/inputs/steering_cases.md` and correct the
-   evidence where the author remembers more than the data shows.
+code. The author reviewed the codes after the coding and agreed with
+them. This review was not blind, because the author saw the codes of
+the model. `results/inputs/disagreements.csv` lists the 11 inputs where
+the two coders differ in the category or the topic. For these, the
+tables use the codes of coder 1.
 
 ## 5. Privacy
 

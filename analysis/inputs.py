@@ -56,6 +56,9 @@ def head(s, n):
     return s if len(s) <= n else s[:n] + " [...]"
 
 
+CASE_END = "2026-11-23T10:00:00Z"
+
+
 def is_paper_thread(title):
     t = (title or "").lower()
     return "paper" in t or "scientific" in t
@@ -213,6 +216,13 @@ def main():
     paper = [r for r in inputs if is_paper_thread(r.get("thread_title"))]
     audit["paper_thread_excluded"] = len(paper)
     inputs = [r for r in inputs if r not in paper]
+    # The case ends when release 0.1.1 is complete. The last release step is
+    # the upload to crates.io on 23 November 2026 (input at 08:29 UTC). The
+    # later inputs in the project threads are about a writing tool of the
+    # author, not about pltrs.
+    late = [r for r in inputs if (r["time"] or "") > CASE_END]
+    audit["after_case_end_excluded"] = len(late)
+    inputs = [r for r in inputs if r not in late]
     os.makedirs(lib.DERIVED, exist_ok=True)
     with open(os.path.join(lib.DERIVED, "human_inputs.jsonl"), "w", encoding="utf-8") as f:
         for r in inputs:
