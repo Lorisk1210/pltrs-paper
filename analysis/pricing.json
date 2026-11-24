@@ -1,0 +1,20 @@
+{
+  "source": "https://platform.claude.com/docs/en/about-claude/pricing (read 2026-11-23)",
+  "unit": "USD per million tokens, Claude API first party, global inference, standard speed, no batch",
+  "models": {
+    "claude-opus-5-5": {"input": 4.0, "cache_write_5m": 5.0, "cache_write_1h": 8.0, "cache_read": 0.20, "output": 20.0},
+    "claude-fable-5-2": {"input": 8.0, "cache_write_5m": 10.0, "cache_write_1h": 16.0, "cache_read": 0.20, "output": 40.0},
+    "claude-sonnet-5-5": {"input": 2.0, "cache_write_5m": 2.5, "cache_write_1h": 4.0, "cache_read": 0.10, "output": 10.0},
+    "claude-haiku-5-5": {"input": 0.10, "cache_write_5m": 0.125, "cache_write_1h": 0.20, "cache_read": 0.01, "output": 0.50},
+    "claude-haiku-5-5>100k": {"input": 0.50, "cache_write_5m": 0.625, "cache_write_1h": 1.0, "cache_read": 0.05, "output": 2.50}
+  },
+  "fast_mode": {
+    "claude-opus-5-5": {"input": 8.0, "output": 40.0},
+    "claude-fable-5-2": {"input": 16.0, "output": 80.0}
+  },
+  "notes": [
+    "Haiku 5.5 uses the >100k prices when input + cache reads + cache writes of one request exceed 100,000 tokens.",
+    "Fast mode multiplies all token prices by 2; cache multipliers apply on top.",
+    "inference_geo 'us' adds 1.1x. All requests in the data have inference_geo 'global' or no value."
+  ]
+}

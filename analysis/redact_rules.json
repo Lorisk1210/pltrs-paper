@@ -1,0 +1,95 @@
+{
+  "_note": "Rules for analysis/redact.py. The author must check these rules before publication. 'literal' rules replace exact strings, 'regex' rules use Python regular expressions. The rules apply in the order of this file. The literal rules (exact private strings such as host names and user names) are in data/private/redact_literals.json, which is not in git.",
+  "regex": [
+    [
+      "/home/loris\\b",
+      "/home/author"
+    ],
+    [
+      "(?i)\\bklindworth\\b",
+      "author"
+    ],
+    [
+      "(?<=\\s)loris(?=\\s+(?:loris|staff|users|Users|wheel)\\b)",
+      "author"
+    ],
+    [
+      "(?<=[\\\\/])loris(?=[\\\\/\"'])",
+      "author"
+    ],
+    [
+      "-----BEGIN [A-Z ]*PRIVATE KEY-----[\\s\\S]*?-----END [A-Z ]*PRIVATE KEY-----",
+      "[REDACTED-PRIVATE-KEY]"
+    ],
+    [
+      "sk-ant-[A-Za-z0-9_\\-]{20,}",
+      "[REDACTED-API-KEY]"
+    ],
+    [
+      "\\bsk-(?:proj-)?[A-Za-z0-9_\\-]{24,}",
+      "[REDACTED-API-KEY]"
+    ],
+    [
+      "\\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}",
+      "[REDACTED-GITHUB-TOKEN]"
+    ],
+    [
+      "pypi-[A-Za-z0-9_\\-]{40,}",
+      "[REDACTED-PYPI-TOKEN]"
+    ],
+    [
+      "\\bAKIA[0-9A-Z]{16}\\b",
+      "[REDACTED-AWS-KEY]"
+    ],
+    [
+      "xox[abprs]-[A-Za-z0-9\\-]{10,}",
+      "[REDACTED-SLACK-TOKEN]"
+    ],
+    [
+      "\\beyJ[A-Za-z0-9_\\-]{10,}\\.[A-Za-z0-9_\\-]{10,}\\.[A-Za-z0-9_\\-]{10,}",
+      "[REDACTED-JWT]"
+    ],
+    [
+      "ibssh_[a-z0-9]{10,}",
+      "[REDACTED-USER]"
+    ],
+    [
+      "\\b100\\.(?:6[4-9]|[7-9]\\d|1[01]\\d|12[0-7])\\.\\d{1,3}\\.\\d{1,3}\\b",
+      "[REDACTED-IP]"
+    ],
+    [
+      "\\b(?:192\\.168|10\\.\\d{1,3}|172\\.(?:1[6-9]|2\\d|3[01]))\\.\\d{1,3}\\.\\d{1,3}\\b",
+      "[REDACTED-IP]"
+    ],
+    [
+      "(?i)\\b[a-z0-9\\-]+\\.fritz\\.box\\b",
+      "[REDACTED-HOST]"
+    ],
+    [
+      "(?<![A-Za-z0-9._%+\\-])(?!noreply@anthropic\\.com)(?!git@github\\.com)[A-Za-z0-9._%+\\-]+@(?!example\\.)[A-Za-z0-9\\-]+(?:\\.[A-Za-z0-9\\-]+)*\\.[A-Za-z]{2,6}\\b(?![.(\\w])",
+      "[REDACTED-EMAIL]"
+    ],
+    [
+      "(\"(?:creator_user_id|creator_account_id|accountUuid|organizationUuid|userID)\"\\s*:\\s*\")[^\"]+(\")",
+      "\\1[REDACTED-ID]\\2"
+    ],
+    [
+      "(?i)(\\b(?:api[_-]?key|auth[_-]?token|access[_-]?token|secret|password|passwd)\\b[\"']?\\s*[:=]\\s*[\"']?)[A-Za-z0-9_\\-\\.\\/+=]{12,}",
+      "\\1[REDACTED-SECRET]"
+    ],
+    [
+      "((?:TOKEN|_KEY|SECRET|PASSWORD)['\"]?\\s*[:=]\\s*['\"])([^'\"\\s]{12,})",
+      "\\1[REDACTED-SECRET]"
+    ]
+  ],
+  "remove_images": true,
+  "known_secrets_from": [
+    "~/.claude/settings.json env values whose names contain TOKEN, KEY, SECRET or PASSWORD"
+  ],
+  "open_decisions": [
+    "The GitHub account name in repository URLs is public. The rules keep it.",
+    "The first name of the author is replaced in paths, in user@host strings and in the host name of the Mac. Other occurrences of the first name stay. The family name is replaced everywhere.",
+    "Screenshots (image blocks) are removed, because they can show the desktop. Set remove_images to false to keep them."
+  ],
+  "literal_file": "data/private/redact_literals.json"
+}
